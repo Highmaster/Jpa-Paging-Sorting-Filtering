@@ -10,6 +10,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -38,8 +40,13 @@ public class EmployeeCriteriaRepository {
         setOrder(employeePage, criteriaQuery, employeeRoot);
 
         TypedQuery<Employee> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(employeePage.getPageNumber() = employeePage.getPageSize())
+        typedQuery.setFirstResult(employeePage.getPageNumber() * employeePage.getPageSize());
+        typedQuery.setMaxResults(employeePage.getPageSize());
+
+        Pageable pageable =  getPageable(employeePage);
     }
+
+
 
 
     private Predicate getPredicate(EmployeeSearchCriteria employeeSearchCriteria,
@@ -68,6 +75,11 @@ public class EmployeeCriteriaRepository {
         } else {
             criteriaQuery.orderBy(criteriaBuilder.desc(employeeRoot.get(employeePage.getSortBy())));
         }
+    }
+
+    private Pageable getPageable(EmployeePage employeePage) {
+        Sort sort = Sort.by(employeePage.getSortDirection(), employeePage.getSortBy());
+        return PageRequest.of(employeePage.getPageNumber(), employeePage.getPageSize(), sort);
     }
 }
 
