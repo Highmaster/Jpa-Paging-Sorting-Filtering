@@ -37,3 +37,23 @@ public class EmployeeCriteriaRepository {
         setOrder(employeePage, criteriaQuery, employeeRoot);
     }
 
+
+    private Predicate getPredicate(EmployeeSearchCriteria employeeSearchCriteria,
+                                   Root<Employee> employeeRoot) {
+        List<Predicate> predicates = new ArrayList<>();
+        if(Objects.nonNull(employeeSearchCriteria.getFirstName())) {
+            predicates.add(
+                    criteriaBuilder.like(employeeRoot.get("firstName"),
+                            "%" + employeeSearchCriteria.getFirstName() + "%")
+            );
+        }
+        if(Objects.nonNull(employeeSearchCriteria.getLastName())) {
+            predicates.add(
+                    criteriaBuilder.like(employeeRoot.get("lastName"),
+                            "%" + employeeSearchCriteria.getLastName() + "%")
+            );
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    }
+
+
