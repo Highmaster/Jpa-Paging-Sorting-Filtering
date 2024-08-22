@@ -1,10 +1,10 @@
 package com.coded.jpa_paging_sorting_filtering.repository;
 
-
 import com.coded.jpa_paging_sorting_filtering.model.Employee;
 import com.coded.jpa_paging_sorting_filtering.model.EmployeePage;
 import com.coded.jpa_paging_sorting_filtering.model.EmployeeSearchCriteria;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @Repository
 public class EmployeeCriteriaRepository {
@@ -35,6 +36,9 @@ public class EmployeeCriteriaRepository {
         Predicate predicate = getPredicate(employeeSearchCriteria, employeeRoot);
         criteriaQuery.where(predicate);
         setOrder(employeePage, criteriaQuery, employeeRoot);
+
+        TypedQuery<Employee> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(employeePage.getPageNumber() = employeePage.getPageSize())
     }
 
 
@@ -66,5 +70,7 @@ public class EmployeeCriteriaRepository {
         }
     }
 }
+
+
 
 
