@@ -56,4 +56,15 @@ public class EmployeeCriteriaRepository {
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
+    private void setOrder(EmployeePage employeePage,
+                          CriteriaQuery<Employee> criteriaQuery,
+                          Root<Employee> employeeRoot) {
+        if(employeePage.getSortDirection().equals(Sort.Direction.ASC)){
+            criteriaQuery.orderBy(criteriaBuilder.asc(employeeRoot.get(employeePage.getSortBy()))) ;
+        } else {
+            criteriaQuery.orderBy(criteriaBuilder.desc(employeeRoot.get(employeePage.getSortBy())));
+        }
+    }
+}
+
 
